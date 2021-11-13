@@ -1,3 +1,3 @@
 # IA
 
-Fichas da UC de Intelig
+Fichas da UC de Inteligência Artificial

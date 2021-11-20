@@ -38,22 +38,41 @@ adjacente(X,Y,K,E, grafo(_,Es)) :- member(aresta(Y,X,K,E),Es).
 %--------------------------------- 
 %alinea 2)
 
+auxiliarCaminho(_,A,[A|P1],[A|P1]).
+auxiliarCaminho(G,A,[Y|P1]) :- adjacente(X, Y, _, _, G), 
+                    not(member(X, [Y|P1])), 
+                    auxiliarCaminho(G,A,[X, Y|P1],P).
 
+caminho(G,A,B,P) :- auxiliarCaminho(G,A,[B],P).
 
 
 %--------------------------------- 
 % alinea 3)
 
-
+ciclo(G,A,P):- adjacente(B,A,_,_,G),
+	            caminho(G, A, B, P1),
+	            length(P1, L), L > 2, append(P1, [A], P).
 
 %--------------------------------- 
 %alinea 4)
 
+auxiliarCaminhoK(_, A, [A|P1], Km, Est,([A|P1], Km, Est)).
+auxiliarCaminhoK(G, A, [Y|P1], Km, Est, (P, Km1, Est1)):- adjacente(X, Y, Estrada, Dist, G), 
+	                                                        not(member(X, [Y|P1])),
+	                                                        Km2 is Km + Dist, 
+	                                                        auxiliarCaminhoK(G, A, [X, Y|P1], Km2, [Estrada|Est], (P, Km1, Est1)). 
+
+caminhoK(G, A, B, P, Km, Est):- auxiliarCaminhoK(G, A, [B], 0, [], (P, Km, Est)).
 
 
 %--------------------------------- 
 %alinea 5)
 
+cicloK(G, A, P, Km, Est):- adjacente(B, A, Es1, Km1, G),
+	                         caminhoK(G, A, B, P1, Km2, Es1),
+	                         length(P1, L), L> 2,
+	                         append(P1, [A], P),
+	                         Km is Km1 + Km2. 
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Extensao do meta-predicado nao: Questao -> {V,F}
@@ -63,5 +82,4 @@ nao( Questao ) :-
 nao( Questao ).
 
 membro(X, [X|_]).
-membro(X, [_|Xs]):-
-	membro(X, Xs).
+membro(X, [_|Xs]):- membro(X, Xs).

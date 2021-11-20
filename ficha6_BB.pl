@@ -53,4 +53,3 @@ auxiliarProfundidade(Node, Visitados, Custo, Caminho, Total) :- adjacente(Node,X
 
 
 profundidade(Inicio, Caminho, Custo) :- auxiliarProfundidade(Inicio, [], 0, Caminho, Custo).
-
